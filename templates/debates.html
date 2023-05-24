@@ -1,0 +1,43 @@
+{% extends "base.html" %}
+
+{% block title %}
+TODO PAGE NAME
+{% endblock %}
+
+{% block body %}
+<div class="container-fluid row container-styling no-gutters">
+
+        <div class="col-6 col-md-4 search-card-holder">
+            
+            {% for sentence in render_list %}
+
+                <div class="card border-bottom border-secondary rounded-0 search-result-card">
+                    <h5 class="card-title">{{ sentence.person }}</h5>
+                    <h6 class="card-subtitle">{{ sentence.date }}</h6>
+                    <p class="card-text">{{ sentence.content }}</p>
+                    <a href="/debates/{{ query }}/{{ sentence.file }}" type="button" class="btn stretched-link"></a>
+                </div>
+            
+            {% endfor %}
+
+        </div>
+
+        <div class="col-12 col-md-8 search-card-holder">
+            
+            
+            <div class="card rounded-0 search-result-text">
+                <h5 class="card-title">Search results for "tweede kamer"</h5>
+
+                {% for sentence in render_file %}
+
+                    <h6 class="card-subtitle">{{ sentence.person }}</h6>
+                    <p class="card-text">{{ sentence.content }}</p>
+
+                {% endfor %}
+
+            </div>
+
+
+        </div>
+</div>
+{% endblock %}

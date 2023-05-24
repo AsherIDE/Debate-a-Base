@@ -1,0 +1,87 @@
+{% extends "base.html" %}
+
+{% block title %}
+TODO PAGE NAME
+{% endblock %}
+
+{% block body %}
+    <h1>Debateabase Ngram Viewer</h1>
+
+
+    <div id='chart' class='chart'></div>
+
+    <script src='https://cdn.plot.ly/plotly-latest.min.js'></script>
+    <script type='text/javascript'>
+        
+        var query  = "{{ query  | safe }}";
+        var timespan = "{{ timespan  | safe }}";
+        var event_loc = document.getElementById('chart');
+        var graph = {{ graphJSON | safe }};
+        var config = {displayModeBar: false};
+        
+        Plotly.setPlotConfig(config);
+        Plotly.newPlot('chart',graph,{});
+
+        // click event
+        event_loc.on('plotly_click', function(data){
+            var x = data.points[0].x;
+
+            // stuur info naar app
+            fetch('/zoom', {
+                headers : {
+                    'Content-Type' : 'application/json'
+                },
+                method : 'POST',
+                redirect : 'follow',
+                body : JSON.stringify( {
+                    'x' : x,
+                    'query' : query,
+                    'timespan' : timespan
+                })
+            })
+            .then(response => response.json())  
+            .then(json => {
+                document.body.innerHTML = json["template"]
+                
+                var query  = json["query"];
+                var timespan = json["timespan"];
+                var event_loc = document.getElementById('chart');
+                var graph = JSON.parse(json["graphJSON"]);
+                var config = {displayModeBar: false};
+                
+                Plotly.setPlotConfig(config);
+                Plotly.plot('chart',graph,{});
+
+                // click event
+                event_loc.on('plotly_click', function(data){
+                    var x = data.points[0].x;
+
+                    // stuur info naar app
+                    fetch('/zoom', {
+                        headers : {
+                            'Content-Type' : 'application/json'
+                        },
+                        method : 'POST',
+                        redirect : 'follow',
+                        body : JSON.stringify( {
+                            'x' : x,
+                            'query' : query,
+                            'timespan' : timespan
+                        })
+                    })
+                    .then(response => response.json())  
+                    .then(json => {
+                        document.body.innerHTML = json["template"]
+                        
+                        var graph = JSON.parse(json["graphJSON"]);
+                        var config = {displayModeBar: false};
+                        
+                        Plotly.setPlotConfig(config);
+                        Plotly.plot('chart',graph,{});
+                    })
+                })
+            })
+        });
+
+    </script>
+{% endblock %}

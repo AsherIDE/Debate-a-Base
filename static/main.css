@@ -1,0 +1,64 @@
+body{
+    background-color: #2B2D31 !important;
+    overflow-y: hidden;
+}
+
+/* navbar */
+.search-bar{
+    background-color: #1E1F22 !important;
+    color: #797E86;
+}
+
+/* containers */
+.container-styling{
+    margin-top: 0.2%;
+}
+
+.no-gutters {
+    margin-right: 0;
+    margin-left: 0;
+  
+    > .col,
+    > [class*="col-"] {
+      padding-right: 0;
+      padding-left: 0;
+    }
+}
+
+/* zoekresultaten blokken (links)*/
+.search-card-holder{
+    max-height: calc(100vh - 56px);
+    margin-bottom: 10px;
+    overflow-y: scroll;
+    -webkit-overflow-scrolling: touch;
+}
+
+.search-result-card-first{
+    background: #3A3C42 !important;
+    color: #797E86;
+    border: 0px solid #3F4147 !important;
+}
+
+.search-result-card{
+    background: #2B2D31 !important;
+    color: #797E86;
+    border: 0px solid #3F4147 !important;
+    max-height: 125px; 
+    min-height: 125px;
+    overflow: hidden;
+    /* margin-top: -1px; */
+}
+
+.search-result-card-selected{
+    background: #36373D !important;
+    color: #797E86;
+    border: 1px solid #3F4147 !important;
+    /* margin-top: -1px; */
+}
+
+/* zoekresultaten tekst (rechts) */
+.search-result-text{
+    background: #3A3C42 !important;
+    color: #F2F3F5;
+    border: 0px !important;
+}
