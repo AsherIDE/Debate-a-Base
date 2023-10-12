@@ -1,17 +1,466 @@
-<nav class="navbar bg-body-tertiary" style="background-color: #1E1F22">
-  
+<nav class="navbar navbar-expand-lg bg-body-tertiary fixed-top" id="top-bar" style="background-color: #1E1F22">
   <div class="container-fluid">
-    
-    <form class="d-flex" role="search" method="post">
-      <a class="navbar-brand" href="/">ICON</a>
-      <input class="form-control mr-sm-2 search-bar" type="search" placeholder="Search" aria-label="Search" name="query">
-      <button class="btn btn-outline-success" type="submit">Search</button>
-    </form>
 
+    <!-- links aligned -->
+    <div class="collapse navbar-collapse" id="navbarSupportedContent">
+
+      <!-- brand -->
+      <a class="navbar-brand" href="/">
+        <img src="/static/icons/favicon.png" alt="DB" height="30" width="30">
+      </a>
+
+      <!-- search bar -->
+      <form class="dropdown d-flex mr-3" role="search" method="post">
+
+        {% if query %}
+          <input class="selectpicker form-control mr-sm-2 search-bar" id="main-search-in" type="text" placeholder='"{{ query }}"' aria-label="Search" name="query" autocomplete="off" data-bs-toggle="dropdown" onclick="keep_suggestions_open()" onblur="close_suggestions()"></input>
+        {% else %}
+          <input class="selectpicker form-control mr-sm-2 search-bar" id="main-search-in" type="text" placeholder="Search" aria-label="Search" name="query" autocomplete="off" data-bs-toggle="dropdown" onclick="keep_suggestions_open()" onblur="close_suggestions()"></input>
+        {% endif %}
+
+        {% if not about %}
+          <button class="btn btn-outline-success" type="submit">Search</button>
+        {% else %}
+          <button class="btn btn-outline-success mr-2" type="submit" name="debates">Debates</button>
+          <button class="btn btn-outline-success" type="submit" name="ngrams">Ngrams</button>
+        {% endif %}
+
+        <ul class="dropdown-menu dselect-items" id="main-search" style="background-color: #313338; color: #F2F3F5">
+          <!-- button results worden hier neergezet -->
+        </ul>
+
+      </form>
+
+
+
+      
+
+      <!-- filters -->
+      {% if nav_options %}
+
+
+
+
+        <!-- country filter -->
+        {% if "countries" in nav_options.keys() %}
+          <form class="dropdown mr-2" role="search" method="post">
+
+            <!-- button kleur -->
+            {% if selected_settings and "countries" in selected_settings.keys() %}
+              <button class="btn btn-info rounded-pill dropdown-toggle select" type="button" id="dropdown-country" data-bs-toggle="dropdown" aria-expanded="false">
+                Country
+              </button>
+            {% else %}
+              <button class="btn btn-outline-info rounded-pill dropdown-toggle select" type="button" id="dropdown-country" data-bs-toggle="dropdown" aria-expanded="false">
+                Country
+              </button>
+            {% endif %}
+            
+
+            <ul class="dropdown-menu scrollbar" aria-labelledby="dropdown-country" style="background-color: #313338; color: #F2F3F5; max-height:350px;">
+              <!-- search button -->
+              <button class="btn btn-primary btn-sm ml-2 mb-2" type="submit" id="remote_country_search">Search</button>
+
+              <hr class="hr hr-blurry no-vertical-gutters ml-2 mr-2" style="background-color: #6c757d;"/>
+
+              <div class="scrollbar-content">
+                <!-- selected countries -->
+                {% for k, v in nav_options["countries"].items() %}
+                  {% if selected_settings and "countries" in selected_settings.keys() and k in selected_settings["countries"] %}
+                    
+                    <label class="dropdown-item form-check-label text-info ml-2" for="{{ k }}">
+                      <input class="form-check-input" type="checkbox" id="{{ k }}" name="ct={{ k }}" checked/>
+                      <img class="rounded ml-2" src="/static/country_icons/{{ k }}.svg" alt="{{ k }}" height="20px" width="20px">
+                      {{ v }}
+                    </label>
+
+                  {% else %}
+                        
+                    <label class="dropdown-item form-check-label filter-layout ml-2" for="{{ k }}">
+                      <input class="form-check-input stretched-link" type="checkbox" id="{{ k }}" name="ct={{ k }}"/>
+                      <img class="rounded ml-2" src="/static/country_icons/{{ k }}.svg" alt="{{ k }}" height="20px" width="20px">
+                      {{ v }}
+                    </label>
+
+                  {% endif %}
+                  <hr class="hr hr-blurry no-vertical-gutters ml-2 mr-2" style="background-color: #6c757d;"/>
+                {% endfor %}
+
+              </div>
+            </ul>
+
+            
+
+            <!-- <ul class="dropdown-menu" aria-labelledby="dropdown-country" style="background-color: #313338; color: #F2F3F5">
+              <hr class="hr hr-blurry no-vertical-gutters ml-2 mr-2" style="background-color: #6c757d;"/>
+              selected countries
+              {% for k, v in nav_options["countries"].items() %}
+                {% if selected_settings and "countries" in selected_settings.keys() and k in selected_settings["countries"] %}
+                  
+                  <label class="dropdown-item form-check-label text-info ml-2" for="{{ k }}">
+                    <input class="form-check-input" type="checkbox" id="{{ k }}" name="ct={{ k }}" checked/>
+                    <img class="rounded ml-2" src="/static/country_icons/{{ k }}.svg" alt="{{ k }}" height="20px" width="20px">
+                    {{ v }}
+                  </label>
+
+                {% else %}
+                      
+                  <label class="dropdown-item form-check-label filter-layout ml-2" for="{{ k }}">
+                    <input class="form-check-input stretched-link" type="checkbox" id="{{ k }}" name="ct={{ k }}"/>
+                    <img class="rounded ml-2" src="/static/country_icons/{{ k }}.svg" alt="{{ k }}" height="20px" width="20px">
+                    {{ v }}
+                  </label>
+
+                {% endif %}
+                <hr class="hr hr-blurry no-vertical-gutters ml-2 mr-2" style="background-color: #6c757d;"/>
+              {% endfor %}
+
+              search button
+              <button class="btn btn-primary btn-sm ml-2 mt-2" type="submit" id="remote_country_search">Search</button>
+
+            </ul> -->
+
+          </form>
+        {% endif %}
+
+
+
+
+        <!-- searching translations -->
+        {% if "search_translation" in nav_options.keys() %}
+          <form class="dropdown mr-2" role="search" method="post">
+
+            <!-- button kleur -->
+            {% if selected_settings and "search_translation" in selected_settings.keys() and selected_settings["search_translation"] == "ON" %}
+              <button class="btn btn-info rounded-pill dropdown-toggle select" type="button" id="dropdown-translations" data-bs-toggle="dropdown" aria-expanded="false">
+                English translations
+              </button>
+            {% else %}
+              <button class="btn btn-outline-info rounded-pill dropdown-toggle select" type="button" id="dropdown-translations" data-bs-toggle="dropdown" aria-expanded="false">
+                Original data
+              </button>
+            {% endif %}
+            
+            <ul class="dropdown-menu" aria-labelledby="dropdown-translations" style="background-color: #313338; color: #F2F3F5">
+              <hr class="hr hr-blurry no-vertical-gutters ml-2 mr-2" style="background-color: #6c757d;"/>
+
+              <!-- selected translations -->
+              {% for k in nav_options["search_translation"] %}
+
+                <button class="dropdown-item filter-layout" name="str={{ k }}">{{ k }}</button>
+                <hr class="hr hr-blurry no-vertical-gutters ml-2 mr-2" style="background-color: #6c757d;"/>
+
+              {% endfor %}
+
+            </ul>
+
+          </form>
+        {% endif %}
+
+
+
+
+        <!-- person -->
+        {% if "person" in nav_options.keys() %}
+          <div class="dropdown mr-2" role="search">
+
+            <!-- button kleur -->
+            {% if selected_settings and "person" in selected_settings.keys() %}
+              <button class="btn btn-info rounded-pill dropdown-toggle select" type="button" data-bs-toggle="dropdown" aria-expanded="false">
+                {{ selected_settings["person"] }}
+              </button>
+            {% else %}
+              <button class="btn btn-outline-info rounded-pill dropdown-toggle select" type="button" data-bs-toggle="dropdown" aria-expanded="false">
+                Person
+              </button>
+            {% endif %}
+
+            <!-- search suggesties -->
+            <form class="dropdown d-flex mr-3" role="search" method="post">
+
+              <ul class="dropdown-menu dselect-items p-2"  style="background-color: #313338; color: #F2F3F5">
+
+                <div class="d-flex mb-2">
+                  <input class="selectpicker form-control mr-sm-2 search-bar" id="person-search-in" type="text" placeholder="Search" aria-label="Search" name="p=" autocomplete="off" data-bs-toggle="dropdown" style="width: 175px;"></input>
+                  <button class="btn btn-primary btn-sm" type="submit">Search</button>
+                </div>
+
+                <!-- button results worden hier neergezet -->
+                <div id="person-search"></div>
+
+              </ul>
+      
+            </form>
+
+          </div>
+        {% endif %}
+
+        
+
+
+
+        <!-- party -->
+        {% if "party" in nav_options.keys() %}
+          <div class="dropdown mr-2" role="search">
+
+            <!-- button kleur -->
+            {% if selected_settings and "party" in selected_settings.keys() %}
+              <button class="btn btn-info rounded-pill dropdown-toggle select" type="button" data-bs-toggle="dropdown" aria-expanded="false">
+                {{ selected_settings["party"] }}
+              </button>
+            {% else %}
+              <button class="btn btn-outline-info rounded-pill dropdown-toggle select" type="button" data-bs-toggle="dropdown" aria-expanded="false">
+                Political party
+              </button>
+            {% endif %}
+            
+            <!-- search suggesties -->
+            <form class="dropdown d-flex mr-3" role="search" method="post">
+
+              <ul class="dropdown-menu dselect-items p-2"  style="background-color: #313338; color: #F2F3F5">
+
+                <div class="d-flex mb-2">
+                  <input class="selectpicker form-control mr-sm-2 search-bar" id="party-search-in" type="text" placeholder="Search" aria-label="Search" name="pa=" autocomplete="off" data-bs-toggle="dropdown" style="width: 175px;"></input>
+                  <button class="btn btn-primary btn-sm" type="submit">Search</button>
+                </div>
+
+                <!-- button results worden hier neergezet -->
+                <div id="party-search"></div>
+
+              </ul>
+      
+            </form>
+
+          </div>
+        {% endif %}
+
+
+
+
+
+        <!-- year -->
+        {% if "year" in nav_options.keys() %}
+          <form class="dropdown mr-2" role="search" method="post">
+
+            <!-- button kleur -->
+            {% if selected_settings and "year" in selected_settings.keys() %}
+              <button class="btn btn-info rounded-pill dropdown-toggle select" type="button" id="dropdown-year" data-bs-toggle="dropdown" aria-expanded="false">
+                {{ selected_settings["year"] }}
+              </button>
+            {% else %}
+              <button class="btn btn-outline-info rounded-pill dropdown-toggle select" type="button" id="dropdown-year" data-bs-toggle="dropdown" aria-expanded="false">
+                Year
+              </button>
+            {% endif %}
+            
+            <ul class="dropdown-menu scrollbar" aria-labelledby="dropdown-day" style="background-color: #313338; color: #F2F3F5; max-height:250px; max-width:50px; overflow-y:scroll">
+              <hr class="hr hr-blurry no-vertical-gutters ml-2 mr-2" style="background-color: #6c757d;"/>
+
+              <div class="scrollbar-content">
+                <!-- selected translations -->
+                {% for k in nav_options["year"] %}
+
+                <button class="dropdown-item filter-layout" name="y={{ k }}">{{ k }}</button>
+                <hr class="hr hr-blurry no-vertical-gutters ml-2 mr-2" style="background-color: #6c757d;"/>
+
+                {% endfor %}
+              </div>
+
+            </ul>
+
+          </form>
+        {% endif %}
+
+
+
+
+
+        <!-- month -->
+        {% if "month" in nav_options.keys() %}
+          <form class="dropdown mr-2" role="search" method="post">
+
+            <!-- button kleur -->
+            {% if selected_settings and "month" in selected_settings.keys() %}
+              <button class="btn btn-info rounded-pill dropdown-toggle select" type="button" id="dropdown-month" data-bs-toggle="dropdown" aria-expanded="false">
+                {{ selected_settings["month"] }}
+              </button>
+            {% else %}
+              <button class="btn btn-outline-info rounded-pill dropdown-toggle select" type="button" id="dropdown-month" data-bs-toggle="dropdown" aria-expanded="false">
+                Month
+              </button>
+            {% endif %}
+            
+            <ul class="dropdown-menu" aria-labelledby="dropdown-month" style="background-color: #313338; color: #F2F3F5">
+              <hr class="hr hr-blurry no-vertical-gutters ml-2 mr-2" style="background-color: #6c757d;"/>
+
+              <!-- selected translations -->
+              {% for k in nav_options["month"] %}
+
+                <button class="dropdown-item filter-layout" name="m={{ k }}">{{ k }}</button>
+                <hr class="hr hr-blurry no-vertical-gutters ml-2 mr-2" style="background-color: #6c757d;"/>
+
+              {% endfor %}
+
+            </ul>
+
+          </form>
+        {% endif %}
+
+
+
+
+
+
+        <!-- day -->
+        {% if "day" in nav_options.keys() %}
+          <form class="dropdown mr-2" role="search" method="post">
+
+            <!-- button kleur -->
+            {% if selected_settings and "day" in selected_settings.keys() %}
+              <button class="btn btn-info rounded-pill dropdown-toggle select" type="button" id="dropdown-day" data-bs-toggle="dropdown" aria-expanded="false">
+                {{ selected_settings["day"] }}
+              </button>
+            {% else %}
+              <button class="btn btn-outline-info rounded-pill dropdown-toggle select" type="button" id="dropdown-day" data-bs-toggle="dropdown" aria-expanded="false">
+                Day
+              </button>
+            {% endif %}
+            
+            <ul class="dropdown-menu scrollbar" aria-labelledby="dropdown-day" style="background-color: #313338; color: #F2F3F5; max-height:250px; max-width:50px; overflow-y:scroll">
+              <hr class="hr hr-blurry no-vertical-gutters ml-2 mr-2" style="background-color: #6c757d;"/>
+
+              <div class="scrollbar-content">
+                <!-- selected translations -->
+                {% for k in nav_options["day"] %}
+
+                    <button class="dropdown-item filter-layout" name="d={{ k }}">{{ k }}</button>
+                    <hr class="hr hr-blurry no-vertical-gutters ml-2 mr-2" style="background-color: #6c757d;"/>
+
+                {% endfor %}
+              </div>
+
+            </ul>
+
+          </form>
+        {% endif %}
+
+      
+
+
+
+
+        <!-- reset filters button -->
+        <form class="navbar-nav me-auto" action="" method="post">
+          <button class="clear-filters" name="clear_filters">Clear filters</button>
+        </form>
+      {% endif %}
+
+    </div>
+
+    <!-- rechts aligned -->
     <div class="d-flex flex-row-reverse">
-      <a class="nav-link active" href="/debates">Debates</a>
-      <a class="nav-link" href="/">Ngrams</a>
+      <a class="nav-link active no-gutters" href="/">About</a>
+      <a class="nav-link active no-gutters" href="/debates">Debates</a>
+      <a class="nav-link no-gutters" href="/ngrams">Ngrams</a>
+      <div class="my-auto vl"></div>
     </div>
 
   </div>
+
 </nav>
+
+<script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.6.1/jquery.min.js" integrity="sha512-aVKKRRi/Q/YV+4mjoKBsE4x3H+BkegoM/em46NNlCqNTmUYADjBbeNefNxYV7giUp0VxICtqdrbqU7iVaeZNXA==" crossorigin="anonymous" referrerpolicy="no-referrer"></script>
+<script>
+  // ngram detect input voor autocomplete
+  $(document).ready(function() {
+    let debounce;
+    $('#main-search-in').on('keydown', function (e) { 
+      clearTimeout(debounce)
+      debounce = setTimeout(() => {
+        getAutoComplete("ngram", '#main-search-in', 'main-search');  
+      }, 300);
+    })
+  })
+
+  // person detect input voor autocomplete
+  $(document).ready(function() {
+    let debounce;
+    $('#person-search-in').on('keydown', function (e) { 
+      clearTimeout(debounce)
+      debounce = setTimeout(() => {
+        getAutoComplete("person", '#person-search-in', 'person-search');  
+      }, 300);
+    })
+  })
+
+  // party detect input voor autocomplete
+  $(document).ready(function() {
+    let debounce;
+    $('#party-search-in').on('keydown', function (e) { 
+      clearTimeout(debounce)
+      debounce = setTimeout(() => {
+        getAutoComplete("party", '#party-search-in', 'party-search');  
+      }, 300);
+    })
+  })
+
+  // haal search suggestions op
+  function getAutoComplete(category, id_in, id_out) {
+    const query = $(id_in).val();
+    
+    // stuur info naar app en redirect dan
+    fetch('/search', {
+      headers : {
+          'Content-Type' : 'application/json'
+      },
+      method : 'POST',
+      redirect : 'follow',
+      body : JSON.stringify( {
+          'query' : query,
+          'category' : category
+      })
+    })
+    .then((resp) => resp.json())
+    .then((data) => {
+
+      $("#" + id_out).empty();
+      document.getElementById(id_out).innerHTML += `<hr class="hr hr-blurry no-vertical-gutters ml-2 mr-2" style="background-color: #6c757d;"/>`;
+      for (let i = 0; i < data.length; i++) {
+        
+        document.getElementById(id_out).innerHTML += `<button type="button" class="dropdown-item filter-layout" onclick="load_clicked_result('${data[i]}', '${category}')">${data[i]}</button>`;
+        document.getElementById(id_out).innerHTML += `<hr class="hr hr-blurry no-vertical-gutters ml-2 mr-2" style="background-color: #6c757d;"/>`;
+        
+      }
+    })
+  }
+
+  // doe post request voor search
+  function load_clicked_result(selected_query, category) {
+    // stuur info naar app en redirect dan
+    fetch('/search_confirm', {
+      headers : {
+          'Content-Type' : 'application/json'
+      },
+      method : 'POST',
+      redirect : 'follow',
+      body : JSON.stringify( {
+          'selected_query' : selected_query,
+          'url' : window.location.pathname,
+          'category' : category
+      })
+    })
+    .then(response => response.json())  
+    .then(json => {
+        window.location.href = json["url"];
+    })
+  }
+
+  // zorg dat zoeksuggesties voor search niet sluiten als er nog focus is
+  function keep_suggestions_open() {
+    $('#main-search').dropdown('show');
+  }
+  function close_suggestions() {
+    $('#main-search').dropdown('hide');
+  }
+
+</script>

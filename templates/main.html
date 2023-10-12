@@ -1,87 +1,153 @@
 {% extends "base.html" %}
 
 {% block title %}
-TODO PAGE NAME
+    {% if query %}
+        Ngram: {{ query }}
+    {% else %}
+        Ngram viewer
+    {% endif %}
 {% endblock %}
 
 {% block body %}
-    <h1>Debateabase Ngram Viewer</h1>
+    <div class="col-md-10 mx-auto search-card-holder card rounded-0 search-result-text container-styling fixed-top z-index-1 pt-4 scrollbar" id="ngrams-page">
+        <div class="scrollbar-content" style="max-height: calc(100vh - 63px);">
+            <div class="text-center"><img src="/static/icons/favicon.png" alt="DB" height="60" width="60"></div>
 
+            <h1 class="text-center">
+                {% if timespan and timespan in ["complete", "day"] %}
+                    <button class="clear-filters" onclick="history.back()">
+                        <img src="/static/icons/back.png" alt="back" height="30px" width="30px">
+                    </button>
+                {% endif %}
+                Debate a Base Ngram Viewer
+            </h1>
 
-    <div id='chart' class='chart'></div>
+            <!-- Graph -->
+            <div class="container-fluid about-card rounded text-center pb-1"> 
+                {% if query and query != "no_query_yet" and graphJSON != 0 %}
+                    <div id='chart'></div>
+                {% elif graphJSON == 0 %}
+                    <h1 class="card-title text-danger mt-3">X</h1>
+                    <h3 class="card-subtitle font-italic mb-3" style="color: #F2F3F5;">No ngram results found for "<span class="text-danger">{{ query }}</span>"</h3>
+                {% endif %}
+            </div>
+            
+
+            <!-- Info -->
+            <div class="container-fluid mt-2">
+                <div class="row text-center align-items-center mb-3">
+
+                    <!-- gebruiksinstructies -->
+                    <div class="col about-card rounded mr-1 pb-2" id="left_instruction">
+                        <h3>How to search</h3>
+                        <hr class="hr hr-blurry no-vertical-gutters" style="background-color: #3A3C42;"/>
+
+                        <ol class="text-left">
+                            <li>Search for a term (with a <span class="text-success">maximum of 5 words</span>)</li>
+                            <li>The resulting graph can be <span class="text-danger font-weight-bold">CLICKED TO ZOOM IN</span> and shows:
+                                <ol>
+                                    <li>All <span class="text-success">months</span> of the clicked year</li>
+                                    <li>All <span class="text-success">days</span> of the clicked month</li>
+                                    <li>The <span class="text-success">debates</span> page with the resulting debates from the clicked day</li>
+                                </ol>
+                            </li>
+                            <li>Alternatively, multiple <span class="text-success">Ngrams can be compared</span> if <span class="text-danger font-weight-bold">ONE</span> country is filtered:
+                                <ol>
+                                    <li>Use a comma to separate: <a class="text-success" href="/ngrams/churchill,%20thatcher,%20johnson/year/all_ct_GB">Churchill, Thatcher, Johnson</a></li>
+                                </ol>
+                            </li>
+                        </ol>
+                    </div>
+
+                    <!-- ngram instructies -->
+                    <div class="col about-card rounded ml-1 pb-2" id="right_instruction">
+                        <h3>About Ngrams</h3>
+                        <hr class="hr hr-blurry no-vertical-gutters" style="background-color: #3A3C42;"/>
+
+                        <ul class="text-left">
+                            <li>A ngram represents the percentage of a word (combination), divided by the total amount of words</li>
+                            <li>N in ngram stands for the amount of words that is used in the equation</li>
+                            <li>Example sentence: <span class="font-italic">"With <span class="text-info">ngrams</span> it is very easy to understand word significances, because <span class="text-info">ngrams</span> plot the percentage against a point in time"</span>
+                                <ul>
+                                    <li>The percentage for "<span class="text-info font-italic">ngrams</span>" would be (2/20) * 100% = 10%</li>
+                                </ul>
+                            </li>
+                        </ul>
+                    </div>
+
+                </div>
+            </div>
+        </div>
+    </div>
+    
+    <script>
+        // positioning
+        var navHeight = document.getElementById('top-bar').clientHeight + 5;
+        document.getElementById("ngrams-page").setAttribute("style", `margin-top: ${navHeight}px;`)
+
+        // correct sizing voor instructies
+        var left_instruction_height = document.getElementById('left_instruction').clientHeight;
+        var right_instruction_height = document.getElementById('right_instruction').clientHeight;
+        if (left_instruction_height > right_instruction_height) {
+            document.getElementById('right_instruction').setAttribute("style",`height:${left_instruction_height}px`);
+        }
+        else {
+            document.getElementById('left_instruction').setAttribute("style",`height:${right_instruction_height}px`);
+        }
+
+    </script>
 
     <script src='https://cdn.plot.ly/plotly-latest.min.js'></script>
     <script type='text/javascript'>
         
         var query  = "{{ query  | safe }}";
         var timespan = "{{ timespan  | safe }}";
-        var event_loc = document.getElementById('chart');
-        var graph = {{ graphJSON | safe }};
-        var config = {displayModeBar: false};
+
+        {% if graphJSON %}
+            var graph = {{ graphJSON | safe }};
+        {% else %}
+            var graph = 0;
+        {% endif %}
         
-        Plotly.setPlotConfig(config);
-        Plotly.newPlot('chart',graph,{});
+        var event_loc = document.getElementById('chart');
+        var config = {displayModeBar: false, responsive: true};
 
-        // click event
-        event_loc.on('plotly_click', function(data){
-            var x = data.points[0].x;
+        var settings = "{{ settings }}";
+        
+        // render graph als er meer dan 0 resultaten zijn
+        if (graph != 0) {
+            Plotly.setPlotConfig(config);
+            Plotly.newPlot('chart', graph, {});
 
-            // stuur info naar app
-            fetch('/zoom', {
-                headers : {
-                    'Content-Type' : 'application/json'
-                },
-                method : 'POST',
-                redirect : 'follow',
-                body : JSON.stringify( {
-                    'x' : x,
-                    'query' : query,
-                    'timespan' : timespan
-                })
-            })
-            .then(response => response.json())  
-            .then(json => {
-                document.body.innerHTML = json["template"]
-                
-                var query  = json["query"];
-                var timespan = json["timespan"];
-                var event_loc = document.getElementById('chart');
-                var graph = JSON.parse(json["graphJSON"]);
-                var config = {displayModeBar: false};
-                
-                Plotly.setPlotConfig(config);
-                Plotly.plot('chart',graph,{});
+            // click event
+            event_loc.on('plotly_click', function(data){
+                            var x = data.points[0].x;
 
-                // click event
-                event_loc.on('plotly_click', function(data){
-                    var x = data.points[0].x;
+                            // stuur info naar app en redirect dan
+                            fetch('/zoom', {
+                                headers : {
+                                    'Content-Type' : 'application/json'
+                                },
+                                method : 'POST',
+                                redirect : 'follow',
+                                body : JSON.stringify( {
+                                    'x' : x,
+                                    'query' : query,
+                                    'timespan' : timespan,
+                                    'settings' : settings
+                                })
+                            })
+                            .then(response => response.json())  
+                            .then(json => {
 
-                    // stuur info naar app
-                    fetch('/zoom', {
-                        headers : {
-                            'Content-Type' : 'application/json'
-                        },
-                        method : 'POST',
-                        redirect : 'follow',
-                        body : JSON.stringify( {
-                            'x' : x,
-                            'query' : query,
-                            'timespan' : timespan
+                                if (json["url"] != "none") {
+                                    window.location.href = json["url"];
+                                }
+                                
+                            })
                         })
-                    })
-                    .then(response => response.json())  
-                    .then(json => {
-                        document.body.innerHTML = json["template"]
-                        
-                        var graph = JSON.parse(json["graphJSON"]);
-                        var config = {displayModeBar: false};
-                        
-                        Plotly.setPlotConfig(config);
-                        Plotly.plot('chart',graph,{});
-                    })
-                })
-            })
-        });
+        }
 
     </script>
+
 {% endblock %}

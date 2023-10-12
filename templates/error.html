@@ -1,0 +1,74 @@
+{% extends "base.html" %}
+
+{% block title %}
+    Error
+{% endblock %}
+
+{% block body %}
+
+    <div class="col-md-10 mx-auto card rounded-0 search-result-text fixed-top pt-4 pb-3 z-index-1 scrollbar" id="about-page">
+        <div class="scrollbar-content" style="max-height: calc(100vh - 63px);">
+
+            <div class="text-center"><img src="/static/icons/favicon.png" alt="DB" height="60" width="60"></div>
+
+            <h1 class="text-center">
+                {{ error[0] }}
+            </h1>
+
+            <!-- Error header -->
+            <div class="container-fluid about-card rounded">
+
+                <div class="row align-items-center">
+                    
+                    <!-- Error uitleg -->
+                    <div class="container-fluid about-card rounded text-center pb-1"> 
+                        <h1 class="card-title text-danger mt-3">X</h1>
+                        <h3 class="card-subtitle font-italic mb-3" style="color: #F2F3F5;">{{ error[1] }}</h3>
+                    </div>
+                    
+                </div>
+
+            </div>
+
+            <!-- links naar andere paginas -->
+            <div class="container-fluid mt-2">
+                <div class="row text-center align-items-center">
+
+                    <!-- Debates -->
+                    <div class="col about-card rounded mr-1 pb-2">
+                        <h3>Debates</h3>
+                        <hr class="hr hr-blurry no-vertical-gutters" style="background-color: #3A3C42;"/>
+
+                        <p>
+                            Maybe try your luck with the debates page?
+                            <br>
+                            <span class="text-info">Or just don't know where to start?</span> Click the button below for an example.
+                        </p>
+                        <a type="button" href="/debates/no%20mistake/ParlaMint-GB_2020-06-22-lords.xml/ON_str__translate_ftr__" class="btn btn-info">Debates: "no mistake"</a>
+                    </div>
+
+                    <!-- Ngrams -->
+                    <div class="col about-card rounded ml-1 pb-2">
+                        <h3>Ngrams</h3>
+                        <hr class="hr hr-blurry no-vertical-gutters" style="background-color: #3A3C42;"/>
+
+                        <p>
+                            Maybe try your luck with the ngrams page?
+                            <br>
+                            <span class="text-success">Or just don't know where to start?</span> Click the button below for an example.
+                        </p>
+                        <a type="button" href="/ngrams/no%20error/year/all" class="btn btn-success">Ngrams: "no error"</a>
+                    </div>
+
+                </div>            
+            </div>
+        </div>
+    </div>
+
+    <script>
+        // positioning
+        var navHeight = document.getElementById('top-bar').clientHeight + 5;
+        document.getElementById("about-page").setAttribute("style", `margin-top: ${navHeight}px;`)
+    </script>
+
+{% endblock %}

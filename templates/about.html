@@ -1,0 +1,102 @@
+{% extends "base.html" %}
+
+{% block title %}
+    About Debate a Base
+{% endblock %}
+
+{% block body %}
+
+    <div class="col-md-10 mx-auto card rounded-0 search-result-text fixed-top pt-4 pb-3 z-index-1 scrollbar" id="about-page">
+        <div class="scrollbar-content" style="max-height: calc(100vh - 63px);">
+
+            <div class="text-center"><img src="/static/icons/favicon.png" alt="DB" height="60" width="60"></div>
+
+            <h1 class="text-center">
+                About Debate a Base
+            </h1>
+
+            <!-- The database -->
+            <div class="container-fluid about-card rounded">
+                <h2 class="text-center">The database</h2>
+
+                <hr class="hr hr-blurry no-vertical-gutters" style="background-color: #3A3C42;"/>
+
+                <div class="row align-items-center">
+                    
+                    <div class="col-sm text-center">
+                        <h3 class="text-success">Parliamentary data</h3>
+                        <p>
+                            The debates originate from the <a class="text-success" href="https://www.clarin.eu/parlamint">Parlamint dataset</a> created by the <a class="text-success" href="https://www.clarin.eu/content/participating-consortia">Clarin European Research Infrastructure Consortium</a> which is funded by the countries that have joined the Clarin initiative. 
+                            This dataset makes it possible to actually make comparisons between countries.
+                            <br><br>It consists of debate data from <span class="text-success">25 countries</span> and can be browsed through on the debates page. The entire dataset consists of <span class="text-success">7,5 million speeches</span>, that are stored in one index.
+                            
+                            <br><br>The data for every country is available in both the original language and English. In total <span class="text-success">27 languages</span> have been translated and the source code can be found on <a class="text-success" href="https://github.com/TajaKuzman/Parlamint-translation/tree/master">Taja Kuzman's GitHub</a>.
+                        </p>
+                    </div>
+
+                    <div class="col-sm text-center">
+                        <h3 class="text-info">Ngrams data</h3>
+                        <p>
+                            Every Ngram has been precalculated from the parliamentary data to ensure a swift user experience. 
+                            Ngrams are generated with a maximum length of <span class="text-info">five words</span> long. 
+                            
+                            <br><br>The search engine consists of <span class="text-info">5,8 billion Ngrams</span> that are in five different indexes, based on the sentence length of the Ngram.
+                            Different sentence lengths are stored seperately to browse through the least amount of Ngrams as possible.
+
+                            <br><br>Because of the sheer amount of data, it was decided that only the English translations of every country would be indexed.
+                            This is still <span class="text-info">246 Gigabytes</span> and it also requires a lot of processing power to stay fast.
+                        </p>
+                    </div>
+
+                    <div class="col-sm">
+                        <img class="float-right" src="/static/icons/Country_Dataset.png" alt="Country Chart" width="449px" height="400">
+                    </div>
+                    
+                </div>
+
+            </div>
+
+            <!-- links naar andere paginas -->
+            <div class="container-fluid mt-2">
+                <div class="row text-center align-items-center">
+
+                    <!-- Debates -->
+                    <div class="col about-card rounded mr-1 pb-2">
+                        <h3>Debates</h3>
+                        <hr class="hr hr-blurry no-vertical-gutters" style="background-color: #3A3C42;"/>
+
+                        <p>
+                            The debates page gives access to a large varierty of debates that can be searched through using a simple interface.
+                            More info on the debates page.
+                            <br>
+                            <span class="text-info">Don't know where to start?</span> Click the button below for an example.
+                        </p>
+                        <a type="button" href="/debates/elections/ParlaMint-NL_2020-02-04-eerstekamer-6.xml/ON_str__translate_ftr__" class="btn btn-info">Debates: "elections"</a>
+                    </div>
+
+                    <!-- Ngrams -->
+                    <div class="col about-card rounded ml-1 pb-2">
+                        <h3>Ngrams</h3>
+                        <hr class="hr hr-blurry no-vertical-gutters" style="background-color: #3A3C42;"/>
+
+                        <p>
+                            The ngrams page gives an overview of the relevance of a specified term for a specific country on a specific date.
+                            More info on the ngrams page.
+                            <br>
+                            <span class="text-success">Don't know where to start?</span> Click the button below for an example.
+                        </p>
+                        <a type="button" href="/ngrams/democracy/year/all" class="btn btn-success">Ngrams: "democracy"</a>
+                    </div>
+
+                </div>            
+            </div>
+        </div>
+    </div>
+
+    <script>
+        // positioning
+        var navHeight = document.getElementById('top-bar').clientHeight + 5;
+        document.getElementById("about-page").setAttribute("style", `margin-top: ${navHeight}px;`)
+    </script>
+
+{% endblock %}

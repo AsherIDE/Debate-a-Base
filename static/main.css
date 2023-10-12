@@ -3,10 +3,90 @@ body{
     overflow-y: hidden;
 }
 
+/* ---------------------------------- */
+/* scroll */
+/* ---------------------------------- */
+.scrollbar-toggle
+{
+    visibility: hidden;
+}
+
+.scrollbar
+{
+    overflow-y: auto;
+    margin-bottom: 10px;
+    /* margin-right: 2px; */
+}
+
+.scrollbar-content,
+.scrollbar-toggle:hover,
+.scrollbar-toggle:focus {
+    visibility: visible;
+}
+
+.scrollbar::-webkit-scrollbar
+{
+	width: 7px;
+    position: absolute;
+}
+
+.scrollbar::-webkit-scrollbar-track
+{
+    background-color: #3A3C42;
+}
+
+.scrollbar::-webkit-scrollbar-thumb
+{
+	border-radius: 10px;
+	background-color: #1E1F22;
+    opacity: 0.5;
+}
+
+/* ---------------------------------- */
 /* navbar */
+/* ---------------------------------- */
+
+.nav-link{
+    color: #F2F3F5;
+    font-weight: bold;
+}
+
 .search-bar{
     background-color: #1E1F22 !important;
+    color: #F2F3F5 !important;
+}
+
+.clear-filters{
+    background-color: transparent; 
+    border-color: transparent;
     color: #797E86;
+    text-decoration: underline;
+}
+
+.clear-filters:focus {
+    outline: none;
+}
+
+.filter-layout{
+    background-color: transparent; 
+    border-color: transparent;
+    color: #F2F3F5 !important;
+}
+.filter-layout:focus {
+    outline: none;
+}
+
+.dropdown-item:hover{
+    background: #3A3C42 !important;
+}
+
+.dropdown-menu[aria-labelledby="dropdown-country"] .dropdown-item {
+    width: auto !important;
+}
+
+.form-check-input {
+    width: 20px;
+    height: 20px;
 }
 
 /* containers */
@@ -14,7 +94,7 @@ body{
     margin-top: 0.2%;
 }
 
-.no-gutters {
+.no-gutters{
     margin-right: 0;
     margin-left: 0;
   
@@ -25,18 +105,42 @@ body{
     }
 }
 
-/* zoekresultaten blokken (links)*/
-.search-card-holder{
-    max-height: calc(100vh - 56px);
-    margin-bottom: 10px;
-    overflow-y: scroll;
-    -webkit-overflow-scrolling: touch;
+.no-vertical-gutters{
+    margin-bottom: 0;
+    margin-top: 0;
+  
+    > .col,
+    > [class*="col-"] {
+      padding-bottom: 0;
+      padding-top: 0;
+    }
 }
 
+/* text weg van randen */
+.text-padding{
+    padding-right: 7px;
+    padding-left: 5px;
+}
+
+/* vertical line */
+.vl {
+    border-left: 1px solid #797E86;
+    height: 30px;
+    /* filter: blur(1px); */
+  }
+
+/* ---------------------------------- */
+/* debates page */
+/* ---------------------------------- */
+
+/* zoekresultaten blokken voor debates page*/
 .search-result-card-first{
     background: #3A3C42 !important;
-    color: #797E86;
+    color: #F2F3F5;
     border: 0px solid #3F4147 !important;
+    max-height: 125px; 
+    min-height: 125px;
+    overflow: hidden;
 }
 
 .search-result-card{
@@ -49,9 +153,9 @@ body{
     /* margin-top: -1px; */
 }
 
-.search-result-card-selected{
+.search-result-card:hover{
     background: #36373D !important;
-    color: #797E86;
+    color: #F2F3F5;
     border: 1px solid #3F4147 !important;
     /* margin-top: -1px; */
 }
@@ -61,4 +165,65 @@ body{
     background: #3A3C42 !important;
     color: #F2F3F5;
     border: 0px !important;
+}
+
+/* translate button */
+.translate-available{
+    background-color: transparent; 
+    border-color: transparent;
+    color: #17A2B8;
+    text-decoration: underline;
+}
+
+.translate-unavailable{
+    background-color: transparent; 
+    border-color: transparent;
+    color: #797E86;
+}
+
+/* highlighted stuk in zin */
+.highlight{
+    background-color: #28A745; 
+    font-weight: bold;
+}
+
+.highlight-list{
+    font-weight: bold;
+    color: #28A745;
+}
+
+.highlight-list-error{
+    font-weight: bold;
+    color: #DC3545;
+}
+
+/* query hits browser menu */
+.hits-menu{
+    position:absolute;
+    bottom: 15px;
+    right: 30px;
+    background-color: #2B2D31;
+    z-index: 3;
+    
+}
+
+/* ---------------------------------- */
+/* About page */
+/* ---------------------------------- */
+
+/* card */
+.about-card{
+    background-color: #2B2D31;
+}
+
+
+
+
+/* z-index */
+.z-index-1{
+    z-index: 1 !important;
+}
+
+.dropdown-menu{
+    z-index: 2 !important;
 }
