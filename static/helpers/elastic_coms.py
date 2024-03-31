@@ -358,7 +358,7 @@ def get_party_tag(party):
 
 # zet resultaten op een leesbare manier voor html
 def create_search_list(query_dict, size):
-    translate = False
+    translate = True
     
     countries = []
     if "countries" in query_dict.keys():
@@ -375,17 +375,17 @@ def create_search_list(query_dict, size):
         if k == "search_translation":
             if v == "ON":
                 query["content_translated"] = query_string
-                translate = True
             else:
                 query["content_simplified"] = query_string
+                translate = False
         elif k == "person":
             query["person_simplified"] = v
         else:
             query[k] = v
     
-    # default naar content_simplfied
-    if "content_translated" not in query.keys() and "content_simplified" not in query.keys():
-        query["content_simplified"] = query_string
+    # default naar content_translated
+    if "content_simplified" not in query.keys() and "content_translated" not in query.keys():
+        query["content_translated"] = query_string
         
     result = query_detailed(query, size=100)
 
@@ -434,7 +434,7 @@ def create_search_list(query_dict, size):
 # resultaten voor een volledige file
 def create_file(query_dict, translate):
     result = query_detailed(query_dict, size=10000)
-    content = "content"
+    content = "content_translated"
 
     # kijk of vertaling beschikbaar is
     if len(result['hits']['hits']) == 0:
@@ -446,9 +446,9 @@ def create_file(query_dict, translate):
         
         if translate == "translate":
             language_info = {"language": [language, "Translated"]}
-            content = "content_translated"
         else:
             language_info = {"language": [language, "Translation available"]}
+            content = "content"
 
     else:
         language_info = {"language": [language, "Translation unavailable"]}
@@ -462,19 +462,19 @@ def create_file(query_dict, translate):
 
         sentence["person"] = src["person"]
         sentence["party"] = src["party"]
+        
+        if content != "content_translated":
+            sentence["content"] = src[content]
 
-        if content == "content_translated":
-
+        else:
             if content in src.keys():
                 sentence["content"] = src[content]
             else:
                 sentence["content"] = f"[TRANSLATION MISSING] {src['content']}"
-
-        else:
-            sentence["content"] = src[content]
+            
 
         render_list.append(sentence)
-
+    
     return render_list, language_info
 
 

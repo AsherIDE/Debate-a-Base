@@ -131,13 +131,13 @@
           <form class="dropdown mr-2" role="search" method="post">
 
             <!-- button kleur -->
-            {% if selected_settings and "search_translation" in selected_settings.keys() and selected_settings["search_translation"] == "ON" %}
+            {% if selected_settings and "search_translation" in selected_settings.keys() and selected_settings["search_translation"] == "OFF" %}
               <button class="btn btn-info rounded-pill dropdown-toggle select" type="button" id="dropdown-translations" data-bs-toggle="dropdown" aria-expanded="false">
-                English translations
+                Original data
               </button>
             {% else %}
               <button class="btn btn-outline-info rounded-pill dropdown-toggle select" type="button" id="dropdown-translations" data-bs-toggle="dropdown" aria-expanded="false">
-                Original data
+                English translations
               </button>
             {% endif %}
             

@@ -188,8 +188,8 @@ def debates_file(query, file, settings):
 
         # haal alle geselecteerde settings op
         filters = unpack_debate_settings(settings)
-
-        file_translation = None
+        
+        file_translation = "translate"
         if "file_translation" in filters.keys():
             file_translation = filters.pop("file_translation")
 
