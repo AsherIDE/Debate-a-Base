@@ -26,6 +26,14 @@
 ```
 ELASTIC_PASSWORD=PASSWORDGOESHERE
 ```
+6. One important thing to note is that you will need to create another `.env` file within the main folder of the website
+    - These are also credentials to Elasticsearch
+    - The contents of the file should look like this:
+```
+DAB_ES_HOST=https://localhost:9200
+DAB_ES_USER=elastic
+DAB_ES_PASSWORD=PASSWORDGOESHERE
+```
 4. Run `docker-compose up -d` to start the stack
 5. The website is should now be available at `0.0.0.0:5000`, however we do still need the data
 6. Run `docker-compose down` to shut all containers down again
