@@ -21,7 +21,7 @@ def redirect_ngram(form, settings):
         countries = "_ct_"
 
         for country in form:
-            countries += (country.replace("ct=", "") + "-")
+            countries += (country.replace("-", "+").replace("ct=", "") + "-")
 
         if "_ct_" in settings:
             settings = settings.split("_ct_")[0]
@@ -64,7 +64,7 @@ def redirect_debate(form, settings):
         countries = ""
 
         for country in form:
-            countries += (country.replace("ct=", "") + "-")
+            countries += (country.replace("-", "+").replace("ct=", "") + "-")
 
         settings_dict["ct"] = countries[:-1]
         

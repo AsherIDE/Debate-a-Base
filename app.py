@@ -16,7 +16,7 @@ app = Flask(__name__, template_folder="templates", static_folder="static")
 # NOTE: hardcoded dataset definities (in elastic_coms staat een lijst met landen waarvan vertalingen beschikbaar zijn)
 # nav options voor ngrams
 ngram_nav_options = {}
-ngram_nav_options["countries"] = {"AT": "Austria", "BA": "Bosnia Herzegovina", "BE": "Belgium", "BG": "Bulgaria", "CZ": "Czech Republic", "DK": "Denmark", "EE": "Estonia", "ES-CT": "Spain Catalonia", "ES-GA": "Spain Galicia", "FR": "France", "GB": "Great Britain", "GR": "Greece", "HR": "Croatia", "HU": "Hungary", "IS": "Iceland", "IT": "Italy", "LV": "Latvia", "NL": "the Netherlands", "NO": "Norway", "PL": "Poland", "PT": "Portugal", "RS": "Serbia", "SE": "Sweden", "SI": "Slovenia", "TR": "Turkiye", "UA": "Ukraine"}
+ngram_nav_options["countries"] = {"AT": "Austria", "BA": "Bosnia Herzegovina", "BE": "Belgium", "BG": "Bulgaria", "CZ": "Czech Republic", "DK": "Denmark", "EE": "Estonia", "FI": "Finland", "FR": "France", "GB": "Great Britain", "GR": "Greece", "HR": "Croatia", "HU": "Hungary", "IS": "Iceland", "IT": "Italy", "LV": "Latvia", "NL": "the Netherlands", "NO": "Norway", "PL": "Poland", "PT": "Portugal", "RS": "Serbia", "SE": "Sweden", "SI": "Slovenia", "ES": "Spain", "ES-PV": "Spain Basque", "ES-CT": "Spain Catalonia", "ES-GA": "Spain Galicia", "TR": "Turkiye", "UA": "Ukraine"}
 
 # nav options voor debates
 debate_nav_options = {}
@@ -24,7 +24,7 @@ debate_nav_options["countries"] = ngram_nav_options["countries"]
 debate_nav_options["search_translation"] = ["Browse in English translations of countries", "Browse in every original language"]
 debate_nav_options["person"] = "Person"
 debate_nav_options["party"] = "Party"
-debate_nav_options["year"] = [2022, 2021, 2020, 2019, 2018, 2017, 2016, 2015, 2014, 2013, 2012, 2011, 2010, 2009, 2008, 2007, 2006, 2005, 2004, 2003, 2002, 2001, 2000, 1999, 1998, 1997, 1996]
+debate_nav_options["year"] = [2023, 2022, 2021, 2020, 2019, 2018, 2017, 2016, 2015, 2014, 2013, 2012, 2011, 2010, 2009, 2008, 2007, 2006, 2005, 2004, 2003, 2002, 2001, 2000, 1999, 1998, 1997, 1996]
 debate_nav_options["month"] = ["01", "02", "03", "04", "05", "06", "07", "08", "09", "10", "11", "12"]
 debate_nav_options["day"] = ["01", "02", "03", "04", "05", "06", "07", "08", "09", "10", "11", "12", "13", "14", "15", "16", "17", "18", "19", "20", "21", "22", "23", "24", "25", "26", "27", "28", "29", "30", "31"]
 
@@ -360,7 +360,7 @@ def zoom():
             if "_ct_" in settings:
                 countries = settings.split("_ct_")[1]
                 setting += countries + "_ct__"
-                search_dict["countries"] = countries.split("-")
+                search_dict["countries"] = [country.replace("+", "-") for country in countries.split("-")]
 
             file = create_search_list(search_dict, 1)
             if file == None:

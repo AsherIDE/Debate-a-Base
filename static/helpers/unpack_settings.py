@@ -5,7 +5,7 @@ def unpack_ngram_settings(timespan, settings):
         settings = settings.split("_ct_")[0]
 
         for country in countries_text.split("-"):
-            countries.append(country)
+            countries.append(country.replace("+", "-"))
 
     if "all" not in settings:
         year, month, day = settings.split("-")
@@ -35,7 +35,7 @@ def unpack_debate_settings(settings):
     if "_ct__" in settings:
         countries = []
         for country in settings_dict["ct"].split("-"):
-            countries.append(country)
+            countries.append(country.replace("+", "-"))
 
         filters["countries"] = countries
 
